@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>최순원 교수 홈 </title>
+    <title>최순원 교수 홈페이지 </title>
+    <!-- 프리텐다드 서체 적용 -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <style>
         /* 테마 컬러 세팅 */
@@ -354,7 +355,7 @@
             .award-img { max-width: 100%; }
         }
 
-        /* 5. 방명록 섹션 */
+        /* 5. 방명록 섹션 스타일 */
         #guestbook {
             background-color: var(--bg-white);
             border-top: 1px solid var(--border-color);
@@ -421,7 +422,7 @@
         }
 
         .gb-list-box {
-            max-height: 450px;
+            max-height: 400px;
             overflow-y: auto;
             padding-right: 10px;
         }
@@ -454,6 +455,15 @@
             font-size: 0.95rem;
             white-space: pre-line;
             color: var(--text-dark);
+        }
+
+        .gb-delete-btn {
+            background: none;
+            border: none;
+            color: #C87A7A;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
 
         /* 6. 연락처 섹션 */
@@ -507,9 +517,10 @@
 </head>
 <body>
 
+    <!-- 상단 바 -->
     <header>
         <div class="container nav-container">
-            <div class="logo">최순원 교수 포트폴리오</div>
+            <div class="logo">최순원 교수 홈페이지 </div>
             <ul>
                 <li><a href="#home">소개</a></li>
                 <li><a href="#fields">연구분야</a></li>
@@ -521,11 +532,12 @@
         </div>
     </header>
 
+    <!-- 1. 메인 소개 섹션 -->
     <section id="home">
         <div class="container hero-flex">
             <div class="hero-text">
                 <span class="hero-tag">상지대학교 미래인재대학 군사학과</span>
-                <h1 class="hero-title">미래인재의 학습민첩성을 연구하는<br>최순원 교수입니다.</h1>
+                <h1 class="hero-title">군과 조직에서 미래인재의 학습민첩성을 연구하는<br>최순원 교수입니다.</h1>
                 <p class="hero-desc">
                     대한민국 육군 소령 출신으로서 다년간의 실무적 안보 역량과 리더십을 쌓았으며, 현재는 디지털 대전환 시대에 발맞춘 <strong>학습민첩성(Learning Agility), 창의성, AI 리터러시</strong> 분야를 심도 있게 연구하고 있습니다. 변혁적 교육 전문가로서 미래 사회를 혁신적으로 이끌어갈 우수한 인재 양성에 매진하고 있습니다.
                 </p>
@@ -536,6 +548,7 @@
         </div>
     </section>
 
+    <!-- 2. 핵심 전문 분야 섹션 -->
     <section id="fields">
         <div class="container">
             <h2 class="section-title">핵심 연구 및 전문 분야</h2>
@@ -556,6 +569,7 @@
         </div>
     </section>
 
+    <!-- 3. 경력 및 학력 섹션 -->
     <section id="experience">
         <div class="container">
             <h2 class="section-title">경력 및 학력 사항</h2>
@@ -570,7 +584,7 @@
                         <h3>주요 경력</h3>
                         <div class="timeline-item">
                             <div class="timeline-date">2024 - 현재</div>
-                            <div class="timeline-title">상지대학교 미래인재대학 군사학과 조교수(일반전임) </div>
+                            <div class="timeline-title">상지대학교 미래인재대학 군사학과 전임 조교수</div>
                         </div>
                         <div class="timeline-item">
                             <div class="timeline-date">2024 - 현재</div>
@@ -619,6 +633,7 @@
         </div>
     </section>
 
+    <!-- 4. 연구성과 및 수상 섹션 -->
     <section id="publications">
         <div class="container">
             <h2 class="section-title">연구 성과 및 저서</h2>
@@ -658,27 +673,31 @@
         </div>
     </section>
 
+    <!-- 5. 방명록 섹션 -->
     <section id="guestbook">
         <div class="container">
             <h2 class="section-title">방명록</h2>
             <div class="gb-wrapper">
+                <!-- 글쓰기 폼 -->
                 <div class="gb-form">
                     <h3>메시지 남기기</h3>
                     <div class="form-group">
                         <input type="text" id="gb-name" placeholder="작성자 이름">
                     </div>
                     <div class="form-group">
-                        <textarea id="gb-content" rows="4" placeholder="교수님께 전할 응원 메시지를 입력해 주세요."></textarea>
+                        <textarea id="gb-content" rows="4" placeholder="교수님께 전할 메시지를 입력해 주세요."></textarea>
                     </div>
-                    <button class="gb-btn" onclick="addMessage()">등록하기</button>
+                    <button class="gb-btn">등록하기</button>
                 </div>
+                <!-- 글 목록 리스트 -->
                 <div class="gb-list-box" id="gb-list">
-                    <p style="color:var(--text-muted); font-size:0.95rem;">방명록을 불러오는 중입니다...</p>
+                    <!-- 자바스크립트로 메시지가 동적 렌더링됩니다 -->
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- 6. 연구실 안내 및 연락처 섹션 -->
     <section id="contact">
         <div class="container">
             <h2 class="section-title">Contact Information</h2>
@@ -699,58 +718,78 @@
         </div>
     </section>
 
+    <!-- 푸터 -->
     <footer>
         <div class="container">
             <p>&copy; 2026 Professor Choi Soon-won. All Rights Reserved.</p>
         </div>
-    </footer>
+    </style>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script>
-        // 공용 데이터베이스(Firebase) 환경설정
+    <!-- Firebase 실시간 방명록 스크립트 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // [중요] 아래 항목들을 교수님의 Firebase 키값으로 직접 변경해 주세요.
         const firebaseConfig = {
-            apiKey: "AIzaSyAsbCHXp" + "M8W_p1Sg" + "kYfA47wM" + "h9XbK8LgG8",
-            authDomain: "choi-guestbook.firebaseapp.com",
-            projectId: "choi-guestbook",
-            storageBucket: "choi-guestbook.appspot.com",
-            messagingSenderId: "560411235123",
-            appId: "1:560411235123:web:9f8e4c7d2b1a3e6f5"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://prof-choi-portfolio-default-rtdb.firebaseio.com/",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
-        
-        // 초기화 및 연결
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
 
-        // 실시간으로 DB에서 글 목록 가져오기 및 동적 렌더링
-        db.collection("messages").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const guestbookRef = ref(db, 'guestbook');
+
+        let guestbookData = [];
+
+        // 실시간 조회 및 화면 표시
+        onValue(guestbookRef, (snapshot) => {
+            const data = snapshot.val();
             const listContainer = document.getElementById('gb-list');
             listContainer.innerHTML = '';
-            
-            if (snapshot.empty) {
+            guestbookData = [];
+
+            if (!data) {
                 listContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.95rem;">첫 번째 응원 메시지를 남겨보세요.</p>';
                 return;
             }
 
-            snapshot.forEach((doc) => {
-                const item = doc.data();
+            Object.keys(data).forEach(key => {
+                guestbookData.push({ id: key, ...data[key] });
+            });
+
+            guestbookData.reverse();
+
+            guestbookData.forEach((item) => {
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'gb-item';
                 itemDiv.innerHTML = `
                     <div class="gb-meta-info">
-                        <span class="gb-name">${escapeHtml(item.name)}</span>
-                        <span>${item.date}</span>
+                        <span class="gb-name">${item.name}</span>
+                        <div>
+                            <span style="margin-right:10px;">${item.date}</span>
+                            <button class="gb-delete-btn" data-id="${item.id}">삭제</button>
+                        </div>
                     </div>
-                    <p class="gb-text">${escapeHtml(item.text)}</p>
+                    <p class="gb-text">${item.text}</p>
                 `;
                 listContainer.appendChild(itemDiv);
             });
-        }, (error) => {
-            console.error("DB 로드 에러:", error);
-            document.getElementById('gb-list').innerHTML = '<p style="color:var(--text-muted); font-size:0.95rem;">방명록을 불러오는 데 실패했습니다.</p>';
+
+            document.querySelectorAll('.gb-delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const messageId = e.target.getAttribute('data-id');
+                    deleteMessage(messageId);
+                });
+            });
         });
 
-        // 새로운 메시지 등록 함수
+        // 데이터 등록 함수
         function addMessage() {
             const nameInput = document.getElementById('gb-name');
             const contentInput = document.getElementById('gb-content');
@@ -763,31 +802,28 @@
             const now = new Date();
             const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 
-            // Firebase 클라우드 DB에 데이터 전송
-            db.collection("messages").add({
+            const newMessage = {
                 name: nameInput.value.trim(),
                 text: contentInput.value.trim(),
-                date: dateStr,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .then(() => {
-                nameInput.value = '';
-                contentInput.value = '';
-            })
-            .catch((error) => {
-                alert("메시지 저장 중 오류가 발생했습니다: " + error.message);
-            });
+                date: dateStr
+            };
+
+            push(guestbookRef, newMessage)
+                .then(() => {
+                    nameInput.value = '';
+                    contentInput.value = '';
+                });
         }
 
-        // 보안을 위한 문자열 치환(XSS 방지) 함수
-        function escapeHtml(text) {
-            return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+        // 데이터 삭제 함수
+        function deleteMessage(id) {
+            if (confirm('이 메시지를 삭제하시겠습니까?')) {
+                const itemRef = ref(db, `guestbook/${id}`);
+                remove(itemRef);
+            }
         }
+
+        document.querySelector('.gb-btn').addEventListener('click', addMessage);
     </script>
 </body>
 </html>
