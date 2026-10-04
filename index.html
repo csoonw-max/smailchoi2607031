@@ -685,10 +685,10 @@
                 <div class="gb-form">
                     <h3>메시지 남기기</h3>
                     <div class="form-group">
-                        <input type="text" id="gb-name" placeholder="작성자 이름">
+                        <input type="text" id="gb-name" placeholder="작성자 이름" maxlength="20">
                     </div>
                     <div class="form-group">
-                        <textarea id="gb-content" rows="4" placeholder="교수님께 전할 메시지를 입력해 주세요."></textarea>
+                        <textarea id="gb-content" rows="4" placeholder="교수님께 전할 메시지를 입력해 주세요." maxlength="300"></textarea>
                     </div>
                     <button class="gb-btn">등록하기</button>
                 </div>
@@ -726,107 +726,121 @@
         <div class="container">
             <p>&copy; 2026 Professor Choi Soon-won. All Rights Reserved.</p>
         </div>
-    </style>
+        </footer>
 
-    <!-- Firebase 실시간 방명록 스크립트 -->
+    <!-- Firebase Firestore 방명록 스크립트 -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // [중요] 아래 항목들을 교수님의 Firebase 키값으로 직접 변경해 주세요.
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            databaseURL: "https://prof-choi-portfolio-default-rtdb.firebaseio.com/",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyDztMv0rBe0DpJkl7yHaG-Cts7vwBL7l9I",
+            authDomain: "prof-choi-portfolio.firebaseapp.com",
+            databaseURL: "https://prof-choi-portfolio-default-rtdb.firebaseio.com",
+            projectId: "prof-choi-portfolio",
+            storageBucket: "prof-choi-portfolio.firebasestorage.app",
+            messagingSenderId: "481903670268",
+            appId: "1:481903670268:web:5824e1e053f65d492ef879",
+            measurementId: "G-5BY0EKKZ2G"
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const guestbookRef = ref(db, 'guestbook');
+        const db = getFirestore(app);
+        const guestbookRef = collection(db, 'guestbook');
+        const listContainer = document.getElementById('gb-list');
+        const nameInput = document.getElementById('gb-name');
+        const contentInput = document.getElementById('gb-content');
+        const submitBtn = document.querySelector('.gb-btn');
 
-        let guestbookData = [];
+        function pad(n) { return String(n).padStart(2, '0'); }
 
-        // 실시간 조회 및 화면 표시
-        onValue(guestbookRef, (snapshot) => {
-            const data = snapshot.val();
-            const listContainer = document.getElementById('gb-list');
-            listContainer.innerHTML = '';
-            guestbookData = [];
+        function formatDate(ts) {
+            if (!ts || typeof ts.toDate !== 'function') return '';
+            const d = ts.toDate();
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        }
 
-            if (!data) {
-                listContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.95rem;">첫 번째 응원 메시지를 남겨보세요.</p>';
+        function showNotice(text) {
+            listContainer.textContent = '';
+            const p = document.createElement('p');
+            p.style.color = 'var(--text-muted)';
+            p.style.fontSize = '0.95rem';
+            p.textContent = text;
+            listContainer.appendChild(p);
+        }
+
+        const q = query(guestbookRef, orderBy('createdAt', 'desc'), limit(100));
+        onSnapshot(q, (snapshot) => {
+            if (snapshot.empty) {
+                showNotice('첫 번째 응원 메시지를 남겨보세요.');
                 return;
             }
 
-            Object.keys(data).forEach(key => {
-                guestbookData.push({ id: key, ...data[key] });
-            });
+            listContainer.textContent = '';
+            snapshot.forEach((docSnap) => {
+                const item = docSnap.data({ serverTimestamps: 'estimate' });
 
-            guestbookData.reverse();
-
-            guestbookData.forEach((item) => {
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'gb-item';
-                itemDiv.innerHTML = `
-                    <div class="gb-meta-info">
-                        <span class="gb-name">${item.name}</span>
-                        <div>
-                            <span style="margin-right:10px;">${item.date}</span>
-                            <button class="gb-delete-btn" data-id="${item.id}">삭제</button>
-                        </div>
-                    </div>
-                    <p class="gb-text">${item.text}</p>
-                `;
+
+                const meta = document.createElement('div');
+                meta.className = 'gb-meta-info';
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'gb-name';
+                nameSpan.textContent = item.name;
+
+                const dateSpan = document.createElement('span');
+                dateSpan.textContent = formatDate(item.createdAt);
+
+                meta.appendChild(nameSpan);
+                meta.appendChild(dateSpan);
+
+                const text = document.createElement('p');
+                text.className = 'gb-text';
+                text.style.whiteSpace = 'pre-wrap';
+                text.textContent = item.message;
+
+                itemDiv.appendChild(meta);
+                itemDiv.appendChild(text);
                 listContainer.appendChild(itemDiv);
             });
-
-            document.querySelectorAll('.gb-delete-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const messageId = e.target.getAttribute('data-id');
-                    deleteMessage(messageId);
-                });
-            });
+        }, (error) => {
+            console.error('방명록 불러오기 오류:', error);
+            showNotice('방명록을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
         });
 
-        // 데이터 등록 함수
-        function addMessage() {
-            const nameInput = document.getElementById('gb-name');
-            const contentInput = document.getElementById('gb-content');
-            
-            if (!nameInput.value.trim() || !contentInput.value.trim()) {
+        async function addMessage() {
+            const name = nameInput.value.trim();
+            const message = contentInput.value.trim();
+
+            if (!name || !message) {
                 alert('이름과 내용을 모두 입력해 주세요.');
                 return;
             }
+            if (name.length > 20 || message.length > 300) {
+                alert('이름은 20자, 내용은 300자 이내로 입력해 주세요.');
+                return;
+            }
 
-            const now = new Date();
-            const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-
-            const newMessage = {
-                name: nameInput.value.trim(),
-                text: contentInput.value.trim(),
-                date: dateStr
-            };
-
-            push(guestbookRef, newMessage)
-                .then(() => {
-                    nameInput.value = '';
-                    contentInput.value = '';
+            submitBtn.disabled = true;
+            try {
+                await addDoc(guestbookRef, {
+                    name: name,
+                    message: message,
+                    createdAt: serverTimestamp()
                 });
-        }
-
-        // 데이터 삭제 함수
-        function deleteMessage(id) {
-            if (confirm('이 메시지를 삭제하시겠습니까?')) {
-                const itemRef = ref(db, `guestbook/${id}`);
-                remove(itemRef);
+                nameInput.value = '';
+                contentInput.value = '';
+            } catch (error) {
+                console.error('방명록 등록 오류:', error);
+                alert('등록에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+            } finally {
+                submitBtn.disabled = false;
             }
         }
 
-        document.querySelector('.gb-btn').addEventListener('click', addMessage);
+        submitBtn.addEventListener('click', addMessage);
     </script>
 </body>
 </html>
